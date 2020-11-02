@@ -1,11 +1,11 @@
 //DOWNLOADED CODE FROM: https://www.d3-graph-gallery.com/graph/custom_theme.html
 
-var margin = {top: 10, right: 30, bottom: 40, left: 50},
-    width = 520 - margin.left - margin.right,
-    height = 520 - margin.top - margin.bottom;
+const margin = {top: 10, right: 30, bottom: 40, left: 50}
+const width = 520 - margin.left - margin.right
+const height = 520 - margin.top - margin.bottom
 
 // append the svg object to the body of the page
-var svg = d3.select("#my_dataviz")
+let svg = d3.select("#my_dataviz")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -23,10 +23,10 @@ svg
     .style("fill", "EBEBEB")
 
 //Read the data
-d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/iris.csv", function(data) {
+d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/iris.csv").then(function(data) {
 
   // Add X axis
-  var x = d3.scaleLinear()
+  let x = d3.scaleLinear()
     .domain([4*0.95, 8*1.001])
     .range([ 0, width ])
   svg.append("g")
@@ -35,7 +35,7 @@ d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/ir
     .select(".domain").remove()
 
   // Add Y axis
-  var y = d3.scaleLinear()
+  let y = d3.scaleLinear()
     .domain([-0.001, 9*1.01])
     .range([ height, 0])
     .nice()
@@ -62,7 +62,7 @@ d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/ir
       .text("Petal Length")
 
   // Color scale: give me a specie name, I return a color
-  var color = d3.scaleOrdinal()
+  let color = d3.scaleOrdinal()
     .domain(["setosa", "versicolor", "virginica" ])
     .range([ "#F8766D", "#00BA38", "#619CFF"])
 
