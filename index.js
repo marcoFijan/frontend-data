@@ -1,25 +1,29 @@
-const proxyURL = "https://cors-anywhere.herokuapp.com/" // proxy from Laurens
-const overviewURL = "https://npropendata.rdw.nl/parkingdata/v2/"
+const proxyURL = 'https://cors-anywhere.herokuapp.com/' // proxylink from Laurens Aarnoudse: Needed for https request for getting the data from local host
+const overviewURL = 'https://npropendata.rdw.nl/parkingdata/v2/'
+const cityLocation = 'groningen'
 
+const svg = d3.select('svg')
+//Receiving the data
 const parkingLocationOverview = d3.json(proxyURL + overviewURL)
   .then(parkingOverview => {
-    console.log("overview", parkingOverview)
     const ParkingFacilitiesOverview = parkingOverview.ParkingFacilities
-    console.log('ParkingFacilities:', ParkingFacilitiesOverview)
     const parkingLocation = ParkingFacilitiesOverview.filter(checkLocation)
-    console.log('limitedAccessCity:', parkingLocation)
-    const limitedAccessOverview = parkingLocation.map(parkingIndex => parkingIndex.limitedAccess)
-    console.log('limitedAccessOverview:', limitedAccessOverview)
+    parkingLocation.forEach(location => console.log(location.name, location.limitedAccess))
+    createDiagram(parkingLocation)
   })
 
-const checkLocation = function(locationName){
-  try{
-    return locationName.name.toLowerCase().includes('groningen')
+//
+const checkLocation = location => {
+  if(!location.name){
+    location.name = 'ONBEKEND'
   }
-  catch{
-    console.log('no name found')
-  }
-  // let place = locationName.name.includes('tilburg')
-  // console.log(place)
-  // place.indexOf('tilburg') > -1
+  return location.name.toLowerCase().includes(cityLocation)
+}
+
+//D3 Logic
+const createDiagram = data => {
+  svg.selectAll('rect').data(data)
+    .enter().append('rect')
+      .attr('width', 300)
+      .attr('height', 300)
 }
