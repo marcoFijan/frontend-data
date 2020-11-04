@@ -2,5 +2,12 @@ svg{
   width: 100%;
   max-width: 700px;
   height: 400px;
-  border: 1px solid black;
+}
+
+svg > text{
+  font-size: 1.3em;
+}
+
+rect{
+  fill: steelblue;
 }
