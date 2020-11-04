@@ -25,21 +25,22 @@ const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
 
 //D3 Logic
 const createDiagram = data => {
-  const valueX = d => d.capacity
-  const valueY = d => d.areamanagerid
-  const margin = { left: 20, right: 20, bottom: 20, top: 20 }
+  const valueY = d => d.capacity
+  const valueX = d => d.areamanagerid
+  const margin = { left: 30, right: 20, bottom: 20, top: 20 }
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
 
-  const scaleX = d3.scaleLinear()
-    .domain([0, d3.max(data, valueX)])
-    .range([0, innerWidth])
-    console.log(data)
-    console.log(scaleX.domain())
-
-  const scaleY = d3.scaleBand()
-    .domain(data.map(valueY))
+  const scaleY = d3.scaleLinear()
+    .domain([0, d3.max(data, valueY)])
     .range([0, innerHeight])
+    .nice()
+    console.log(scaleY.range())
+    console.log(scaleY.domain())
+
+  const scaleX = d3.scaleBand()
+    .domain(data.map(valueX))
+    .range([0, innerWidth])
     .padding(0.2)
 
   const g = svg.append('g')
@@ -52,7 +53,8 @@ const createDiagram = data => {
 
   g.selectAll('rect').data(data)
     .enter().append('rect')
-      .attr('y', d => scaleY(valueY(d)))
-      .attr('width', d => scaleX(valueX(d)))
-      .attr('height', scaleY.bandwidth())
+      .attr('x', d => scaleX(valueX(d)))
+      .attr('y', d => innerHeight - scaleY(valueY(d)))
+      .attr('height', d => scaleY(valueY(d)))
+      .attr('width', scaleX.bandwidth())
 }
