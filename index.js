@@ -25,7 +25,7 @@ const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
 
 //D3 Logic
 const createDiagram = data => {
-  const valueY = d => d.capacity
+  const valueY = d => d.capacity = +d.capacity
   const valueX = d => d.areamanagerid
   const margin = { left: 40, right: 20, bottom: 20, top: 50 }
   const innerWidth = width - margin.left - margin.right
