@@ -32,7 +32,7 @@ const createDiagram = data => {
   const innerHeight = height - margin.top - margin.bottom
 
   const scaleY = d3.scaleLinear()
-    .domain([0, d3.max(data, valueY)])
+    .domain([d3.max(data, valueY), 0])
     .range([0, innerHeight])
     .nice()
     // console.log(scaleY.range())
@@ -63,7 +63,7 @@ const createDiagram = data => {
   g.selectAll('rect').data(data)
     .enter().append('rect')
       .attr('x', d => scaleX(valueX(d)))
-      .attr('y', d => innerHeight - scaleY(valueY(d)))
-      .attr('height', d => scaleY(valueY(d)))
+      .attr('y', d => scaleY(valueY(d)))
+      .attr('height', d => innerHeight - scaleY(valueY(d)))
       .attr('width', scaleX.bandwidth())
 }
