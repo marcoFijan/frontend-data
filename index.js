@@ -27,7 +27,7 @@ const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
 const createDiagram = data => {
   const valueY = d => d.capacity
   const valueX = d => d.areamanagerid
-  const margin = { left: 30, right: 20, bottom: 20, top: 20 }
+  const margin = { left: 40, right: 20, bottom: 20, top: 50 }
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
 
@@ -35,7 +35,7 @@ const createDiagram = data => {
     .domain([0, d3.max(data, valueY)])
     .range([0, innerHeight])
     .nice()
-    console.log(scaleY.range())
+    // console.log(scaleY.range())
     console.log(scaleY.domain())
 
   const scaleX = d3.scaleBand()
@@ -46,10 +46,19 @@ const createDiagram = data => {
   const g = svg.append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-  g.append('g').call(d3.axisLeft(scaleY))
-  g.append('g').call(d3.axisBottom(scaleX))
+  const yAxisGroup = g.append('g').call(d3.axisLeft(scaleY))
+  yAxisGroup.select('.domain').remove()
+
+  const xAxisGroup = g.append('g').call(d3.axisBottom(scaleX))
     .attr('transform', 'translate(0,' + innerHeight + ')')
 
+  xAxisGroup.selectAll('.domain, .tick line').remove()
+
+  g.append('text')
+    .text('Aantal parkeerplaatsen per areaManagerId')
+    .attr('y', -20)
+    .attr('x', innerWidth / 2)
+    .attr('class', 'title')
 
   g.selectAll('rect').data(data)
     .enter().append('rect')
