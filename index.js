@@ -13,10 +13,9 @@ const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
   })
   .then(usefullDataArray => {
     console.log(usefullDataArray)
-    return getCapacityPerLocation(usefullDataArray, 'drenthe')
-  })
-  .then(capacityPerLocation => {
-    console.log(capacityPerLocation)
+    const capacityPerLocation = getCapacityPerLocation(usefullDataArray, 'drenthe')
+    getSumOfCapacity(capacityPerLocation)
+    // count all capacity
   })
 
 // const cleanDisabledAccess = function(parkingGarage){
@@ -42,10 +41,6 @@ const getUsefullDataArray = async function(dataArray) {
   return usefullDataArray
 }
 
-const getCapacityPerLocation = function(usefullDataArray, location){
-  return usefullDataArray.filter(garage => garage.location.toLowerCase() === location)
-}
-
 const cleanLocation = function(parkingGarage){
   if (typeof parkingGarage.parkingFacilityInformation.operator.postalAddress == 'undefined'){
     parkingGarage.parkingFacilityInformation.operator.postalAddress = {province: 'unknown'}
@@ -56,7 +51,15 @@ const cleanCapacity = function(parkingGarage){
   if (typeof parkingGarage.parkingFacilityInformation.specifications[0].capacity == 'undefined'){
     parkingGarage.parkingFacilityInformation.specifications[0].capacity = 0
   }
+}
 
+const getCapacityPerLocation = function(usefullDataArray, location){
+  return usefullDataArray.filter(garage => garage.location.toLowerCase() === location)
+}
+
+const getSumOfCapacity = function(capacityPerLocation){
+  const total = capacityPerLocation.reduce((sum, garage) => sum + garage.capacity ,0)//Help from Fun Fun Functions: https://www.youtube.com/watch?v=Wl98eZpkp-c
+  console.log(total)
 }
 
 //D3 Logic
