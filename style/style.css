@@ -15,7 +15,8 @@ svg > text{
 }
 
 rect{
-  fill: steelblue;
+  fill: red;
+  opacity: .8;
 }
 
 .yAxisName, .xAxisName{

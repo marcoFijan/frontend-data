@@ -1,3 +1,5 @@
+// import { max } from 'd3'
+
 const proxyURL = 'https://cors-anywhere.herokuapp.com/' // proxylink from Laurens Aarnoudse: Needed for https request for getting the data from local host
 const parkingSpecsURL = 'https://raw.githubusercontent.com/SharonV33/frontend-data/main/data/parkeergarages_1000.json'
 const provinces = ['groningen', 'friesland', 'overijsel', 'drenthe', 'gelderland', 'limburg', 'noord-brabant', 'zuid-holland', 'noord-holland', 'zeeland', 'utrecht', 'flevoland']
@@ -29,6 +31,7 @@ const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
     // getSumOfCapacity(capacityPerLocation)
     // count all capacity
     console.log(capacityPerLocationCollection)
+    createDiagram(capacityPerLocationCollection)
   })
 
 // const cleanDisabledAccess = function(parkingGarage){
@@ -84,13 +87,12 @@ const getSumOfDisabledCapacity = function(capacityPerLocation){
     return sum
 
   } ,0)//Help from Fun Fun Functions: https://www.youtube.com/watch?v=Wl98eZpkp-c
-  // console.log(total)
 }
 
 //D3 Logic
 const createDiagram = data => {
-  const valueY = d => d.capacity = +d.capacity
-  const valueX = d => d.areamanagerid
+  const valueY = d => d.totalCapacity
+  const valueX = d => d.province
   const margin = { left: 70, right: 20, bottom: 60, top: 50 }
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
@@ -135,10 +137,10 @@ const createDiagram = data => {
     .attr('y', 40)
     .attr('x', innerWidth / 2)
     .attr('class', 'xAxisName')
-    .text('areaManagerId')
+    .text('Provincies')
 
   g.append('text')
-    .text('Aantal parkeerplaatsen per areaManagerId')
+    .text('Aantal parkeerplaatsen per provincie')
     .attr('y', -20)
     .attr('x', innerWidth / 2)
     .attr('class', 'title')
