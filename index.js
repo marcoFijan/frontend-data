@@ -12,6 +12,16 @@ const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
     // const parkingAreaManagerId = parkingOverview.forEach(parkingGarage => console.log(parkingGarage.areamanagerid))
     const splittedParkingOverview = parkingOverview.slice(0, 10)
     splittedParkingOverview.forEach(item => console.log(item.parkingFacilityInformation))
+    console.log(parkingOverview)
+    console.log(getUsefullDataArray(parkingOverview))
+    // here receive:
+    // limitedAccess (boolean)
+    // specifications[0].capacity (integer)
+    // operator{}.postalAddress{}.city / operator{}.postalAddress{}.province (string)
+
+
+
+
     // const ParkingFacilitiesOverview = parkingOverview.ParkingFacilities
     // const parkingLocation = ParkingFacilitiesOverview.filter(checkLocation)
     // parkingLocation.forEach(location => console.log(location.name, location.limitedAccess))
@@ -22,6 +32,22 @@ const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
     // })
     // createDiagram(splittedParkingOverview)
   })
+
+const getUsefullDataArray = function(dataArray) {
+  return usefullDataArray = dataArray.map(parkingGarage => {
+    return {
+      location: parkingGarage.parkingFacilityInformation.operator.postalAddress.province,
+      capacity: parkingGarage.parkingFacilityInformation.specifications[0].capacity,
+      disabledAccess: parkingGarage.parkingFacilityInformation.limitedAccess
+    }
+  })
+}
+
+const Garage = function(location, capacity, disabledAccess){
+  this.location = location
+  this.capacity = capacity
+  this.disabledAccess = disabledAccess
+}
 
 //D3 Logic
 const createDiagram = data => {
