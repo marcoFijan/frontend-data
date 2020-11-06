@@ -1,5 +1,7 @@
 const proxyURL = 'https://cors-anywhere.herokuapp.com/' // proxylink from Laurens Aarnoudse: Needed for https request for getting the data from local host
 const parkingSpecsURL = 'https://raw.githubusercontent.com/SharonV33/frontend-data/main/data/parkeergarages_1000.json'
+const provinces = ['groningen', 'friesland', 'overijsel', 'drenthe', 'gelderland', 'limburg', 'noord-brabant', 'zuid-holland', 'noord-holland', 'zeeland', 'utrecht', 'flevoland']
+
 
 // const margin = { left: 200, right: 50, bottom: 50, top: 50 }
 const svg = d3.select('svg')
@@ -13,9 +15,20 @@ const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
   })
   .then(usefullDataArray => {
     console.log(usefullDataArray)
-    const capacityPerLocation = getCapacityPerLocation(usefullDataArray, 'drenthe')
-    getSumOfCapacity(capacityPerLocation)
+    const capacityPerLocationCollection = provinces.map(province => {
+      const capacityPerLocation = getCapacityPerLocation(usefullDataArray, province)
+      const sumOfCapacity = getSumOfCapacity(capacityPerLocation)
+      const sumOfDisabledCapacity = getSumOfDisabledCapacity(capacityPerLocation)
+      return {
+        province: province,
+        totalCapacity: sumOfCapacity,
+        totalDisabledCapacity: sumOfDisabledCapacity
+      }
+    })
+    // const capacityPerLocation = getCapacityPerLocation(usefullDataArray, 'drenthe')
+    // getSumOfCapacity(capacityPerLocation)
     // count all capacity
+    console.log(capacityPerLocationCollection)
   })
 
 // const cleanDisabledAccess = function(parkingGarage){
@@ -58,8 +71,20 @@ const getCapacityPerLocation = function(usefullDataArray, location){
 }
 
 const getSumOfCapacity = function(capacityPerLocation){
-  const total = capacityPerLocation.reduce((sum, garage) => sum + garage.capacity ,0)//Help from Fun Fun Functions: https://www.youtube.com/watch?v=Wl98eZpkp-c
-  console.log(total)
+  return capacityPerLocation.reduce((sum, garage) => sum + garage.capacity ,0)//Help from Fun Fun Functions: https://www.youtube.com/watch?v=Wl98eZpkp-c
+  // console.log(total)
+}
+
+const getSumOfDisabledCapacity = function(capacityPerLocation){
+  return capacityPerLocation.reduce((sum, garage) => {
+    if(garage.disabledAccess){
+      console.log('found!', garage.location)
+      return sum + garage.capacity
+    }
+    return sum
+
+  } ,0)//Help from Fun Fun Functions: https://www.youtube.com/watch?v=Wl98eZpkp-c
+  // console.log(total)
 }
 
 //D3 Logic
