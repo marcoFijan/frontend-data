@@ -27,7 +27,7 @@ const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
 const createDiagram = data => {
   const valueY = d => d.capacity = +d.capacity
   const valueX = d => d.areamanagerid
-  const margin = { left: 40, right: 20, bottom: 20, top: 50 }
+  const margin = { left: 70, right: 20, bottom: 60, top: 50 }
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
 
@@ -43,16 +43,35 @@ const createDiagram = data => {
     .range([0, innerWidth])
     .padding(0.2)
 
+  const yAxis = d3.axisLeft(scaleY)
+    .tickSize(-innerWidth)
+
+  const xAxis = d3.axisBottom(scaleX)
+
+
   const g = svg.append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-  const yAxisGroup = g.append('g').call(d3.axisLeft(scaleY))
+  const yAxisGroup = g.append('g').call(yAxis)
   yAxisGroup.select('.domain').remove()
 
-  const xAxisGroup = g.append('g').call(d3.axisBottom(scaleX))
+  yAxisGroup.append('text')
+    .attr('y', -50)
+    .attr('x', -(innerHeight / 2))
+    .attr('transform', 'rotate(-90)')
+    .attr('class', 'yAxisName')
+    .text('Aantal parkeerplaatsen')
+
+  const xAxisGroup = g.append('g').call(xAxis)
     .attr('transform', 'translate(0,' + innerHeight + ')')
 
   xAxisGroup.selectAll('.domain, .tick line').remove()
+
+  xAxisGroup.append('text')
+    .attr('y', 40)
+    .attr('x', innerWidth / 2)
+    .attr('class', 'xAxisName')
+    .text('areaManagerId')
 
   g.append('text')
     .text('Aantal parkeerplaatsen per areaManagerId')
