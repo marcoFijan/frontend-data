@@ -1,5 +1,5 @@
 const proxyURL = 'https://cors-anywhere.herokuapp.com/' // proxylink from Laurens Aarnoudse: Needed for https request for getting the data from local host
-const parkingSpecsURL = 'https://opendata.rdw.nl/resource/b3us-f26s.json'
+const parkingSpecsURL = 'https://raw.githubusercontent.com/SharonV33/frontend-data/main/data/parkeergarages_1000.json'
 
 // const margin = { left: 200, right: 50, bottom: 50, top: 50 }
 const svg = d3.select('svg')
@@ -11,16 +11,16 @@ const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
   .then(parkingOverview => {
     // const parkingAreaManagerId = parkingOverview.forEach(parkingGarage => console.log(parkingGarage.areamanagerid))
     const splittedParkingOverview = parkingOverview.slice(0, 10)
-    console.log(splittedParkingOverview)
+    splittedParkingOverview.forEach(item => console.log(item.parkingFacilityInformation))
     // const ParkingFacilitiesOverview = parkingOverview.ParkingFacilities
     // const parkingLocation = ParkingFacilitiesOverview.filter(checkLocation)
     // parkingLocation.forEach(location => console.log(location.name, location.limitedAccess))
-    const selectedParkingData = splittedParkingOverview.map(item => {
-      return{
-        areaManagerId: item.areamanagerid
-      }
-    })
-    createDiagram(splittedParkingOverview)
+    // const selectedParkingData = splittedParkingOverview.map(item => {
+    //   return{
+    //     areaManagerId: item.areamanagerid
+    //   }
+    // })
+    // createDiagram(splittedParkingOverview)
   })
 
 //D3 Logic
