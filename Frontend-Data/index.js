@@ -21,10 +21,12 @@ const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
       const capacityPerLocation = getCapacityPerLocation(usefullDataArray, province)
       const sumOfCapacity = getSumOfCapacity(capacityPerLocation)
       const sumOfDisabledCapacity = getSumOfDisabledCapacity(capacityPerLocation)
+      const percentageDisabledCapacity = getPercentage(sumOfCapacity, sumOfDisabledCapacity)
       return {
         province: province,
         totalCapacity: sumOfCapacity,
-        totalDisabledCapacity: sumOfDisabledCapacity
+        totalDisabledCapacity: sumOfDisabledCapacity,
+        percentage: percentageDisabledCapacity
       }
     })
     // const capacityPerLocation = getCapacityPerLocation(usefullDataArray, 'drenthe')
@@ -89,9 +91,13 @@ const getSumOfDisabledCapacity = function(capacityPerLocation){
   } ,0)//Help from Fun Fun Functions: https://www.youtube.com/watch?v=Wl98eZpkp-c
 }
 
+const getPercentage = function(totalCapacity, disabledCapacity){
+  return disabledCapacity / (totalCapacity / 100)
+}
+
 //D3 Logic
 const createDiagram = data => {
-  const valueY = d => d.totalCapacity
+  const valueY = d => d.percentage
   const valueX = d => d.province
   const margin = { left: 70, right: 20, bottom: 60, top: 50 }
   const innerWidth = width - margin.left - margin.right
