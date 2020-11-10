@@ -2,8 +2,7 @@ const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
 const overviewRDWUrl = 'https://npropendata.rdw.nl/parkingdata/v2/'
 
 async function setupData(){
-  // const parkingOverview = await getData(proxyUrl+overviewRDWUrl)
-  const parkingOverview = await getData(overviewRDWUrl)
+  const parkingOverview = await getData(proxyUrl+overviewRDWUrl)
   console.log(parkingOverview)
   const combinedData = await combineData(parkingOverview)
   console.dir(combinedData)
@@ -14,8 +13,7 @@ async function combineData(parkingOverview){
   const parkingOverviewSliced = parkingOverview.ParkingFacilities
   const parkingIdentifiers = parkingOverviewSliced.map(garage => garage.identifier)
   console.log(parkingIdentifiers)
-  // const baseUrl = proxyUrl + overviewRDWUrl + 'static/'
-  const baseUrl = overviewRDWUrl + 'static/'
+  const baseUrl = proxyUrl + overviewRDWUrl + 'static/'
 
   parkingFacilityArray = parkingIdentifiers.map(identifier => getData(baseUrl+identifier))
   console.log(parkingFacilityArray)
