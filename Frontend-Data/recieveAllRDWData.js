@@ -6,7 +6,7 @@ async function setupData(){
   console.log(parkingOverview)
   const combinedData = await combineData(parkingOverview)
   console.dir(combinedData)
-  document.getElementById('test').addEventListener('click', download_txt(combinedData))
+  document.getElementById('button').addEventListener('click', download_txt(combinedData))
 }
 
 async function combineData(parkingOverview){
@@ -18,7 +18,15 @@ async function combineData(parkingOverview){
   parkingFacilityArray = parkingIdentifiers.map(identifier => getData(baseUrl+identifier))
   console.log(parkingFacilityArray)
   const dataCollection = await Promise.all(parkingFacilityArray)
-  const dataCollectionArray = dataCollection.map(garage => garage.parkingFacilityInformation)
+  const dataCollectionArray = dataCollection.map(garage => {
+    cleanLocation(garage)
+    cleanCapacity(garage)
+    return {
+      location: garage.parkingFacilityInformation.operator.postalAddress.province,
+      capacity: garage.parkingFacilityInformation.specifications[0].capacity,
+      disabledAccess: garage.parkingFacilityInformation.limitedAccess
+    }
+  })
   return dataCollectionArray
 }
 
@@ -29,6 +37,18 @@ async function getData(url){
   setTimeout('', 2000)
   console.log(counter++)
   return parkingOverview
+}
+
+const cleanLocation = function(parkingGarage){
+  if (typeof parkingGarage.parkingFacilityInformation.operator.postalAddress == 'undefined'){
+    parkingGarage.parkingFacilityInformation.operator.postalAddress = {province: null}
+  }
+}
+
+const cleanCapacity = function(parkingGarage){
+  if (typeof parkingGarage.parkingFacilityInformation.specifications[0].capacity == 'undefined'){
+    parkingGarage.parkingFacilityInformation.specifications[0].capacity = null
+  }
 }
 
 function download_txt(data) {

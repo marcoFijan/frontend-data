@@ -11,32 +11,36 @@ const width = 700
 const height = 400
 
 //Receiving the data
-const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
-  .then(parkingOverview => {
-    return getUsefullDataArray(parkingOverview)
-  })
-  .then(usefullDataArray => {
-    console.log(usefullDataArray)
-    const capacityPerLocationCollection = provinces.map(province => {
-      const capacityPerLocation = getCapacityPerLocation(usefullDataArray, province)
-      const sumOfCapacity = getSumOfCapacity(capacityPerLocation)
-      const sumOfDisabledCapacity = getSumOfDisabledCapacity(capacityPerLocation)
-      const percentageDisabledCapacity = getPercentage(sumOfCapacity, sumOfDisabledCapacity)
-      return {
-        province: province,
-        totalCapacity: sumOfCapacity,
-        totalDisabledCapacity: sumOfDisabledCapacity,
-        totalNotDisabledCapacity: (sumOfCapacity - sumOfDisabledCapacity),
-        percentageAvailible: percentageDisabledCapacity,
-        percentageNotAvailible: (100 - percentageDisabledCapacity)
-      }
-    })
-    // const capacityPerLocation = getCapacityPerLocation(usefullDataArray, 'drenthe')
-    // getSumOfCapacity(capacityPerLocation)
-    // count all capacity
-    console.log(capacityPerLocationCollection)
-    createDiagram(capacityPerLocationCollection)
-  })
+const parkingSpecsOverview = JSON.parse(RDWData)
+console.log(parkingSpecsOverview[0])
+
+
+// const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
+//   .then(parkingOverview => {
+//     return getUsefullDataArray(parkingOverview)
+//   })
+//   .then(usefullDataArray => {
+//     console.log(usefullDataArray)
+//     const capacityPerLocationCollection = provinces.map(province => {
+//       const capacityPerLocation = getCapacityPerLocation(usefullDataArray, province)
+//       const sumOfCapacity = getSumOfCapacity(capacityPerLocation)
+//       const sumOfDisabledCapacity = getSumOfDisabledCapacity(capacityPerLocation)
+//       const percentageDisabledCapacity = getPercentage(sumOfCapacity, sumOfDisabledCapacity)
+//       return {
+//         province: province,
+//         totalCapacity: sumOfCapacity,
+//         totalDisabledCapacity: sumOfDisabledCapacity,
+//         totalNotDisabledCapacity: (sumOfCapacity - sumOfDisabledCapacity),
+//         percentageAvailible: percentageDisabledCapacity,
+//         percentageNotAvailible: (100 - percentageDisabledCapacity)
+//       }
+//     })
+//     // const capacityPerLocation = getCapacityPerLocation(usefullDataArray, 'drenthe')
+//     // getSumOfCapacity(capacityPerLocation)
+//     // count all capacity
+//     console.log(capacityPerLocationCollection)
+//     createDiagram(capacityPerLocationCollection)
+//   })
 
 // const cleanDisabledAccess = function(parkingGarage){
 //   if (parkingGarage.parkingFacilityInformation.limitedAccess == false){
