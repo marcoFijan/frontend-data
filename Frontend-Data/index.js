@@ -26,6 +26,7 @@ const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
         province: province,
         totalCapacity: sumOfCapacity,
         totalDisabledCapacity: sumOfDisabledCapacity,
+        totalNotDisabledCapacity: (sumOfCapacity - sumOfDisabledCapacity),
         percentageAvailible: percentageDisabledCapacity,
         percentageNotAvailible: (100 - percentageDisabledCapacity)
       }
@@ -104,16 +105,16 @@ const createDiagram = data => {
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
 
-  const stackGenerator = d3.stack().keys(['percentageAvailible', 'percentageNotAvailible'])
-  console.log('stack:', stackGenerator(data))
+  const stackGenerator = d3.stack().keys(['totalDisabledCapacity', 'totalNotDisabledCapacity'])
   const stackedData = stackGenerator(data)
+  console.log('stackeddata', stackedData)
 
   const colorScale = d3.scaleOrdinal()
-    .domain(['percentageAvailible', 'percentageNotAvailible'])
+    .domain(['totalDisabledCapacity', 'totalNotDisabledCapacity'])
     .range(['green', 'red'])
 
   const scaleY = d3.scaleLinear()
-    .domain([d3.max(stackedData, layer => d3.max(layer, sequence => sequence[1])), 0])
+    .domain([d3.max(stackedData, layer => d3.max(layer, subLayer => subLayer[1])), 0])
     .range([0, innerHeight])
     .nice()
     console.log('domain', scaleY.domain())
