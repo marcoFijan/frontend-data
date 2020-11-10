@@ -10,7 +10,7 @@ async function setupData(){
 }
 
 async function combineData(parkingOverview){
-  const parkingOverviewSliced = parkingOverview.ParkingFacilities
+  const parkingOverviewSliced = parkingOverview.ParkingFacilities.splice(7450, 7500)
   const parkingIdentifiers = parkingOverviewSliced.map(garage => garage.identifier)
   console.log(parkingIdentifiers)
   const baseUrl = proxyUrl + overviewRDWUrl + 'static/'
@@ -19,10 +19,12 @@ async function combineData(parkingOverview){
   console.log(parkingFacilityArray)
   const dataCollection = await Promise.all(parkingFacilityArray)
   const dataCollectionArray = dataCollection.map(garage => {
+    console.log(garage)
     cleanLocation(garage)
     cleanCapacity(garage)
+    console.log('cleaned:', garage)
     return {
-      location: garage.parkingFacilityInformation.operator.postalAddress.province,
+      location: getLocationIfExist(garage),
       capacity: garage.parkingFacilityInformation.specifications[0].capacity,
       disabledAccess: garage.parkingFacilityInformation.limitedAccess
     }
@@ -39,14 +41,47 @@ async function getData(url){
   return parkingOverview
 }
 
+function getLocationIfExist(garage){
+  if (typeof garage.parkingFacilityInformation.operator == 'undefined'){
+    return null
+  }
+
+  else if (garage.parkingFacilityInformation.operator.postalAddress.province !== 'undefined'){
+    return garage.parkingFacilityInformation.operator.postalAddress.province
+  }
+  
+  else{
+    return null
+  }
+}
+
 const cleanLocation = function(parkingGarage){
-  if (typeof parkingGarage.parkingFacilityInformation.operator.postalAddress == 'undefined'){
+
+  if (typeof parkingGarage.parkingFacilityInformation.operator == 'undefined'){
+    console.log('changing')
+    parkingGarage.parkingFacilityInformation = {operator: {postalAddress: {province: null}}}
+  }
+
+  else if (typeof parkingGarage.parkingFacilityInformation.operator.postalAddress == 'undefined'){
     parkingGarage.parkingFacilityInformation.operator.postalAddress = {province: null}
   }
 }
 
 const cleanCapacity = function(parkingGarage){
-  if (typeof parkingGarage.parkingFacilityInformation.specifications[0].capacity == 'undefined'){
+  if (typeof parkingGarage.parkingFacilityInformation.specifications == 'undefined'){
+    parkingGarage.parkingFacilityInformation = {specifications: []}
+    parkingGarage.parkingFacilityInformation.specifications[0] = {capacity: null}
+  }
+
+  else if (typeof parkingGarage.parkingFacilityInformation.specifications[0] == 'undefined' || null){
+    parkingGarage.parkingFacilityInformation.specifications[0].capacity = null
+  }
+
+  else if (parkingGarage.parkingFacilityInformation.specifications[0] == null){
+    parkingGarage.parkingFacilityInformation.specifications[0] = {capacity: null}
+  }
+
+  else if (typeof parkingGarage.parkingFacilityInformation.specifications[0].capacity == 'undefined'){
     parkingGarage.parkingFacilityInformation.specifications[0].capacity = null
   }
 }
