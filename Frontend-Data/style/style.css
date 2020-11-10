@@ -14,10 +14,10 @@ svg > text{
   text-anchor: middle;
 }
 
-rect{
+/* rect{
   fill: red;
   opacity: .8;
-}
+} */
 
 .yAxisName, .xAxisName{
   font-size: 2em;

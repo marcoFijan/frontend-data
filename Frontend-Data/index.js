@@ -108,6 +108,10 @@ const createDiagram = data => {
   console.log('stack:', stackGenerator(data))
   const stackedData = stackGenerator(data)
 
+  const colorScale = d3.scaleOrdinal()
+    .domain(['percentageAvailible', 'percentageNotAvailible'])
+    .range(['green', 'red'])
+
   const scaleY = d3.scaleLinear()
     .domain([d3.max(stackedData, layer => d3.max(layer, sequence => sequence[1])), 0])
     .range([0, innerHeight])
@@ -157,6 +161,7 @@ const createDiagram = data => {
   g.selectAll('.layer').data(stackedData)
     .enter().append('g')
     .attr('class', 'layer')
+    .attr("fill", d => colorScale(d.key))
     .selectAll('rect').data(d => d)
       .enter().append('rect')
         .attr('x', d => scaleX(d.data.province))
