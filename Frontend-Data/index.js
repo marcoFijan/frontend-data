@@ -26,7 +26,8 @@ const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
         province: province,
         totalCapacity: sumOfCapacity,
         totalDisabledCapacity: sumOfDisabledCapacity,
-        percentage: percentageDisabledCapacity
+        percentageAvailible: percentageDisabledCapacity,
+        percentageNotAvailible: (100 - percentageDisabledCapacity)
       }
     })
     // const capacityPerLocation = getCapacityPerLocation(usefullDataArray, 'drenthe')
@@ -98,17 +99,20 @@ const getPercentage = function(totalCapacity, disabledCapacity){
 //D3 Logic
 const createDiagram = data => {
   const valueY = d => d.percentage
-  const valueX = d => d.province
+  const valueX = d => d.province // d.data.province
   const margin = { left: 70, right: 20, bottom: 60, top: 50 }
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
 
+  const stackGenerator = d3.stack().keys(['percentageAvailible', 'percentageNotAvailible'])
+  console.log('stack:', stackGenerator(data))
+  const stackedData = stackGenerator(data)
+
   const scaleY = d3.scaleLinear()
-    .domain([d3.max(data, valueY), 0])
+    .domain([d3.max(stackedData, layer => d3.max(layer, sequence => sequence[1])), 0])
     .range([0, innerHeight])
     .nice()
-    // console.log(scaleY.range())
-    console.log(scaleY.domain())
+    console.log('domain', scaleY.domain())
 
   const scaleX = d3.scaleBand()
     .domain(data.map(valueX))
@@ -119,7 +123,6 @@ const createDiagram = data => {
     .tickSize(-innerWidth)
 
   const xAxis = d3.axisBottom(scaleX)
-
 
   const g = svg.append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
@@ -151,10 +154,31 @@ const createDiagram = data => {
     .attr('x', innerWidth / 2)
     .attr('class', 'title')
 
-  g.selectAll('rect').data(data)
-    .enter().append('rect')
-      .attr('x', d => scaleX(valueX(d)))
-      .attr('y', d => scaleY(valueY(d)))
-      .attr('height', d => innerHeight - scaleY(valueY(d)))
-      .attr('width', scaleX.bandwidth())
+  g.selectAll('.layer').data(stackedData)
+    .enter().append('g')
+    .attr('class', 'layer')
+    .selectAll('rect').data(d => d)
+      .enter().append('rect')
+        .attr('x', d => scaleX(d.data.province))
+        .attr('y', d => scaleY(d[1]))
+        .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
+        .attr('width', scaleX.bandwidth())
+  //
+  //
+  // g.selectAll('rect').data(layers)
+  //   .data(layer => layer)
+  //     .enter().append('rect')
+  //       .attr('class', 'layer')
+
+
+
+
+
+
+  // g.selectAll('rect').data(data)
+  //   .enter().append('rect')
+  //     .attr('x', d => scaleX(valueX(d)))
+  //     .attr('y', d => scaleY(valueY(d)))
+  //     .attr('height', d => innerHeight - scaleY(valueY(d)))
+  //     .attr('width', scaleX.bandwidth())
 }
