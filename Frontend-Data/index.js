@@ -13,7 +13,7 @@ let g
 //-- Position & Size --
 const width = 700
 const height = 400
-const margin = { left: 70, right: 20, bottom: 60, top: 50 }
+const margin = { left: 70, right: 20, bottom: 100, top: 50 }
 const innerWidth = width - margin.left - margin.right
 const innerHeight = height - margin.top - margin.bottom
 //-- Y & X Values --
@@ -158,10 +158,13 @@ const setAxises = function(){
     .attr('transform', 'translate(0,' + innerHeight + ')')
     .attr('class', 'xAxis')
 
+  xAxisGroup.selectAll('text')
+    .attr('transform', 'rotate(45)')
+
   xAxisGroup.selectAll('.domain, .tick line').remove()
 
   xAxisGroup.append('text')
-    .attr('y', 40)
+    .attr('y', 80)
     .attr('x', innerWidth / 2)
     .attr('class', 'xAxisName')
     .text('Provincies')
@@ -202,21 +205,6 @@ const filterBigBar = function(){
   valueY = stackGenerator(filteredArray)
   setScales(filteredData)
 
-  const yAxis = d3.axisLeft(scaleY)
-    .tickSize(-innerWidth)
-
-  const xAxis = d3.axisBottom(scaleX)
-
-  const yAxisGroup = g.append('g').call(yAxis)
-  yAxisGroup.select('.domain').remove()
-
-  yAxisGroup.append('text')
-    .attr('y', -50)
-    .attr('x', -(innerHeight / 2))
-    .attr('transform', 'rotate(-90)')
-    .attr('class', 'yAxisName')
-    .text('Aantal parkeerplaatsen')
-
   // Update the layers and rectangles
   const layers = svg.selectAll('.layer').data(valueY)
   const bars = layers.selectAll('rect').data(d => d)
@@ -228,14 +216,13 @@ const filterBigBar = function(){
     .attr('width', scaleX.bandwidth())
 
   bars.exit().remove()
-    // .enter().append('g')
-    // .attr('class', 'layer')
-    // .attr("fill", d => colorScale(d.key))
-    // .selectAll('rect').data(d => d)
-    //   .enter().append('rect')
-    //     .attr('x', d => scaleX(d.data.province))
-    //     .attr('y', d => scaleY(d[1]))
-    //     .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
-    //     .attr('width', scaleX.bandwidth())
+
+  // update axises
+  svg.select('.xAxis')
+    .call(d3.axisBottom(scaleX))
+      // .attr('transform', 'translate(0,' + innerHeight + ')')
+
+  svg.select('.yAxis')
+    .call(d3.axisLeft(scaleY).tickSize(-innerWidth))
 
 }
