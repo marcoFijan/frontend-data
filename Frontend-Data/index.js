@@ -8,6 +8,7 @@ const provinces = ['groningen', 'friesland', 'overijssel', 'drenthe', 'gelderlan
 //-- General --
 const svg = d3.select('svg')
 let data
+let filteredData
 let g
 //-- Position & Size --
 const width = 700
@@ -108,16 +109,17 @@ const getPercentage = function(totalCapacity, disabledCapacity){
 const createDiagram = function() {
   // Set d3 variables
   valueY = stackGenerator(data)
+  console.log('valueY', valueY)
   g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
   // Create Diagram
-  setScales()
+  setScales(data)
   setAxises()
   drawBar()
   checkInput()
 }
 
-const setScales = function(){
+const setScales = function(data){
   colorScale = d3.scaleOrdinal()
     .domain(['totalDisabledCapacity', 'totalNotDisabledCapacity'])
     .range(['green', 'red'])
@@ -139,7 +141,10 @@ const setAxises = function(){
 
   const xAxis = d3.axisBottom(scaleX)
 
-  const yAxisGroup = g.append('g').call(yAxis)
+  const yAxisGroup = g.append('g')
+    .call(yAxis)
+    .attr('class', 'yAxis')
+
   yAxisGroup.select('.domain').remove()
 
   yAxisGroup.append('text')
@@ -151,6 +156,7 @@ const setAxises = function(){
 
   const xAxisGroup = g.append('g').call(xAxis)
     .attr('transform', 'translate(0,' + innerHeight + ')')
+    .attr('class', 'xAxis')
 
   xAxisGroup.selectAll('.domain, .tick line').remove()
 
@@ -186,5 +192,50 @@ const checkInput = function(){
 }
 
 const filterBigBar = function(){
-  console.log('click')
+  let filterOn = this.checked
+  let filteredArray
+  if (filterOn){
+    const highestCapacity = d3.max(data.map(province => province.totalCapacity)) // calculate highestCapacity
+    filteredArray = data.filter(province => province.totalCapacity !== highestCapacity) // return array without that highestCapacity
+    filteredData = filteredArray
+  }
+  valueY = stackGenerator(filteredArray)
+  setScales(filteredData)
+
+  const yAxis = d3.axisLeft(scaleY)
+    .tickSize(-innerWidth)
+
+  const xAxis = d3.axisBottom(scaleX)
+
+  const yAxisGroup = g.append('g').call(yAxis)
+  yAxisGroup.select('.domain').remove()
+
+  yAxisGroup.append('text')
+    .attr('y', -50)
+    .attr('x', -(innerHeight / 2))
+    .attr('transform', 'rotate(-90)')
+    .attr('class', 'yAxisName')
+    .text('Aantal parkeerplaatsen')
+
+  // Update the layers and rectangles
+  const layers = svg.selectAll('.layer').data(valueY)
+  const bars = layers.selectAll('rect').data(d => d)
+
+  bars
+    .attr('x', d => scaleX(d.data.province))
+    .attr('y', d => scaleY(d[1]))
+    .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
+    .attr('width', scaleX.bandwidth())
+
+  bars.exit().remove()
+    // .enter().append('g')
+    // .attr('class', 'layer')
+    // .attr("fill", d => colorScale(d.key))
+    // .selectAll('rect').data(d => d)
+    //   .enter().append('rect')
+    //     .attr('x', d => scaleX(d.data.province))
+    //     .attr('y', d => scaleY(d[1]))
+    //     .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
+    //     .attr('width', scaleX.bandwidth())
+
 }
