@@ -122,7 +122,7 @@ const createDiagram = function() {
 const setScales = function(data){
   colorScale = d3.scaleOrdinal()
     .domain(['totalDisabledCapacity', 'totalNotDisabledCapacity'])
-    .range(['green', 'red'])
+    .range(['#D2723A', '#2D7EB0'])
 
   scaleY = d3.scaleLinear()
     .domain([d3.max(valueY, layer => d3.max(layer, subLayer => subLayer[1])), 0])
@@ -196,13 +196,16 @@ const checkInput = function(){
 
 const filterBigBar = function(){
   let filterOn = this.checked
-  let filteredArray
   if (filterOn){
     const highestCapacity = d3.max(data.map(province => province.totalCapacity)) // calculate highestCapacity
-    filteredArray = data.filter(province => province.totalCapacity !== highestCapacity) // return array without that highestCapacity
-    filteredData = filteredArray
+    filteredData = data.filter(province => province.totalCapacity !== highestCapacity) // return array without that highestCapacity
   }
-  valueY = stackGenerator(filteredArray)
+
+  else {
+    filteredData = data
+  }
+
+  valueY = stackGenerator(filteredData)
   setScales(filteredData)
 
   // Update the layers and rectangles
@@ -215,12 +218,23 @@ const filterBigBar = function(){
     .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
     .attr('width', scaleX.bandwidth())
 
+  bars.enter()
+    .append('rect')
+      .attr('x', d => scaleX(d.data.province))
+      .attr('y', d => scaleY(d[1]))
+      .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
+      .attr('width', scaleX.bandwidth())
+
   bars.exit().remove()
 
   // update axises
-  svg.select('.xAxis')
+  const callXAxis = svg.select('.xAxis')
     .call(d3.axisBottom(scaleX))
-      // .attr('transform', 'translate(0,' + innerHeight + ')')
+
+  callXAxis.selectAll('.tick>text')
+      .attr('transform', 'rotate(45)')
+
+  callXAxis.selectAll('.domain, .tick line').remove()
 
   svg.select('.yAxis')
     .call(d3.axisLeft(scaleY).tickSize(-innerWidth))

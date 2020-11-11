@@ -1,7 +1,21 @@
+body{
+  background: #2A292F;
+}
+
 svg{
   width: 100%;
   max-width: 700px;
   height: 400px;
+  background: #2A292F;
+
+}
+
+text{
+  fill: #F2F2F2;
+}
+
+.tick line{
+  stroke: #A5A5A6;
 }
 
 svg > text{
@@ -12,6 +26,7 @@ svg > text{
 .title{
   font-size: 1.5em;
   text-anchor: middle;
+  fill: #F2F2F2;
 }
 
 .xAxis text{
@@ -26,5 +41,5 @@ svg > text{
 .yAxisName, .xAxisName{
   font-size: 2em;
   text-anchor: middle;
-  fill: black
+  fill: #F2F2F2;
 }
