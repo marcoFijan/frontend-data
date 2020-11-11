@@ -1,5 +1,11 @@
+/* GENERAL STYLING */
 *{
   font-family: 'Roboto', sans-serif;
+}
+
+*::selection{
+  background: #BA3E8D;
+  color: white;
 }
 
 body{
@@ -38,6 +44,7 @@ h2{
   margin: 1em;
 }
 
+/* D3 CHART STYLING */
 svg{
   width: 700px;
   height: 400px;
@@ -45,6 +52,11 @@ svg{
 
 rect{
   opacity: .8;
+  /* transition: ease-in .2s; */
+}
+
+rect:hover{
+  opacity: 1;
 }
 
 text{

@@ -107,7 +107,7 @@ const getPercentage = function(totalCapacity, disabledCapacity){
 
 //## D3 LOGIC ##
 const createDiagram = function() {
-  // Set d3 variables
+  // Define d3 variables
   valueY = stackGenerator(data)
   console.log('valueY', valueY)
   g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
@@ -117,6 +117,7 @@ const createDiagram = function() {
   setAxises()
   drawBar()
   checkInput()
+  // getAverageCapacity()
 }
 
 const setScales = function(data){
@@ -186,14 +187,42 @@ const drawBar = function(){
         .attr('x', d => scaleX(d.data.province))
         .attr('y', d => scaleY(d[1]))
         .attr('width', scaleX.bandwidth())
-        .attr("height", 0)
+        .attr("height", 0) // set height 0 for the transition
   	    .transition().duration(800)
         .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
+
+  g.selectAll('.labelCollection').data(valueY)
+    .attr('class', 'layerCollection')
+    .enter().append('g')
+    .selectAll('.label').data(d => d)
+      .enter().append('text')
+        .attr('class', 'label')
+        .attr('alignment-baseline', 'middle')
+        .attr('x', d => scaleX(d.data.province))
+        .attr('y', d => scaleY(d[1]))
+        .style('font-size', '12px')
+        .style('font-weight', 'bold')
+        .text(d => d[1]);
 }
 
 const checkInput = function(){
   const userInput = d3.select('#filterBigBar')
       .on("click", filterBigBar)
+}
+
+const getAverageCapacity = function(){
+  const sumOfCapacity = data.reduce((sum, garage) => sum + garage.totalCapacity ,0)
+  const averageOfCapacity = sumOfCapacity / data.length
+  console.log(averageOfCapacity)
+
+    g.select('line')
+      .enter().append('line')
+        .attr('y1', scaleY(averageOfCapacity))
+        .attr('x1', 0)
+        .attr('y2', scaleY(averageOfCapacity))
+        .attr('x2', innerWidth)
+        .attr('stroke-width', 2)
+        .attr('stroke', 'black')
 }
 
 const filterBigBar = function(){
@@ -213,15 +242,28 @@ const filterBigBar = function(){
   // Save the layers and collection of bars into variables
   const layers = svg.selectAll('.layer').data(valueY)
   const bars = layers.selectAll('rect').data(d => d)
+  const labelCollection = svg.selectAll('.labelCollection').data(valueY)
+  const labels = labelCollection.selectAll('text').data(d => d)
+  console.log('labels', labelCollection)
 
   // Update the layers and rectangles
   bars
     .attr('x', d => scaleX(d.data.province))
     .attr('y', d => scaleY(d[1]))
     .attr('width', scaleX.bandwidth())
-    .attr("height", 0)
+    .attr("height", 0) // set height 0 for the transition
     .transition().duration(800)
     .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
+
+  // Update the labels
+  labels
+    .attr('class', 'label')
+    .attr('alignment-baseline', 'middle')
+    .attr('x', d => scaleX(d.data.province))
+    .attr('y', d => scaleY(d[1]))
+    .style('font-size', '12px')
+    .style('font-weight', 'bold')
+    .text(d => d[1]);
 
   // Create new rectangles inside the layers
   bars.enter()
@@ -229,7 +271,7 @@ const filterBigBar = function(){
       .attr('x', d => scaleX(d.data.province))
       .attr('y', d => scaleY(d[1]))
       .attr('width', scaleX.bandwidth())
-      .attr("height", 0)
+      .attr("height", 0) // set height 0 for the transition
       .transition().duration(800)
       .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
 

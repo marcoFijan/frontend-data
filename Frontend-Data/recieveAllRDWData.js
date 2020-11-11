@@ -21,10 +21,6 @@ async function combineData(parkingOverview){
   console.log(parkingFacilityArray)
   const dataCollection = await Promise.all(parkingFacilityArray)
   const dataCollectionArray = dataCollection.map(garage => {
-    // console.log(garage)
-    // cleanLocation(garage)
-    // cleanCapacity(garage)
-    // console.log('cleaned:', garage)
     return {
       location: getLocationIfExist(garage),
       capacity: getCapacityIfExist(garage),
