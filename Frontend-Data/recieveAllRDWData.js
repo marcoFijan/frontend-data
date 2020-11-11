@@ -1,4 +1,6 @@
 const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+// const proxyUrl = 'https://cors-proxy.htmldriven.com/'
+
 const overviewRDWUrl = 'https://npropendata.rdw.nl/parkingdata/v2/'
 
 async function setupData(){
@@ -26,7 +28,7 @@ async function combineData(parkingOverview){
     return {
       location: getLocationIfExist(garage),
       capacity: getCapacityIfExist(garage),
-      disabledAccess: garage.parkingFacilityInformation.limitedAccess
+      disabledAccess: getDisabledAccessIfExist(garage)
     }
   })
   return dataCollectionArray
@@ -47,6 +49,7 @@ function getLocationIfExist(garage){
   }
 
   else if (garage.parkingFacilityInformation.operator.postalAddress.province !== 'undefined'){
+    console.log(garage.parkingFacilityInformation.operator.postalAddress.province)
     return garage.parkingFacilityInformation.operator.postalAddress.province
   }
   return null
@@ -59,6 +62,17 @@ function getCapacityIfExist(garage){
 
   else if (typeof garage.parkingFacilityInformation.specifications[0].capacity !== 'undefined'){
     return garage.parkingFacilityInformation.specifications[0].capacity
+  }
+  return null
+}
+
+function getDisabledAccessIfExist(garage){
+  if ((typeof garage.parkingFacilityInformation.specifications == 'undefined') || (garage.parkingFacilityInformation.specifications[0] == null) || (typeof garage.parkingFacilityInformation.specifications[0] == 'undefined') || (typeof garage.parkingFacilityInformation.specifications[0].capacity == 'undefined')){
+    return null
+  }
+
+  else if (typeof garage.parkingFacilityInformation.specifications[0].disabledAccess !== 'undefined'){
+    return garage.parkingFacilityInformation.specifications[0].disabledAccess
   }
   return null
 }
