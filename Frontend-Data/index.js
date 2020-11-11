@@ -1,15 +1,29 @@
-// import { max } from 'd3'
-
+//## SET DATA CLEANING VARIABLES ##
 const proxyURL = 'https://cors-anywhere.herokuapp.com/' // proxylink from Laurens Aarnoudse: Needed for https request for getting the data from local host
 const parkingSpecsURL = 'https://raw.githubusercontent.com/marcoFijan/hostRDWData/main/data.json'
 const provinces = ['groningen', 'friesland', 'overijssel', 'drenthe', 'gelderland', 'limburg', 'noord-brabant', 'zuid-holland', 'noord-holland', 'zeeland', 'utrecht', 'flevoland']
 
-// const margin = { left: 200, right: 50, bottom: 50, top: 50 }
+//## SET D3 VARIABLES ##
+//-- General --
 const svg = d3.select('svg')
+let data
+let g
+//-- Position & Size --
 const width = 700
 const height = 400
+const margin = { left: 70, right: 20, bottom: 60, top: 50 }
+const innerWidth = width - margin.left - margin.right
+const innerHeight = height - margin.top - margin.bottom
+//-- Y & X Values --
+const stackGenerator = d3.stack().keys(['totalDisabledCapacity', 'totalNotDisabledCapacity'])
+const valueX = d => d.province // d.data.province
+let valueY
+//-- Scales --
+let colorScale
+let scaleY
+let scaleX
 
-//Receiving the data
+//## Receiving the data ##
 const parkingOverviewRequest = d3.json(proxyURL + parkingSpecsURL)
   .then(parkingOverview => {
     console.log(parkingOverview)
@@ -33,13 +47,9 @@ const parkingOverviewRequest = d3.json(proxyURL + parkingSpecsURL)
         percentageNotAvailible: (100 - percentageDisabledCapacity)
       }
     })
-    // const capacityPerLocation = getCapacityPerLocation(usefullDataArray, 'drenthe')
-    // getSumOfCapacity(capacityPerLocation)
-    // count all capacity
-    // capacityPerLocationCollection.forEach(province => province.amountOfGarages = Object.keys(province).length)
     console.log(capacityPerLocationCollection)
-
-    createDiagram(capacityPerLocationCollection)
+    data = capacityPerLocationCollection
+    createDiagram()
   })
 
 const filterUnknown = function(parkingGarages){
@@ -93,40 +103,39 @@ const getPercentage = function(totalCapacity, disabledCapacity){
   return disabledCapacity / (totalCapacity / 100)
 }
 
-//D3 Logic
-const createDiagram = data => {
-  const valueY = d => d.percentage
-  const valueX = d => d.province // d.data.province
-  const margin = { left: 70, right: 20, bottom: 60, top: 50 }
-  const innerWidth = width - margin.left - margin.right
-  const innerHeight = height - margin.top - margin.bottom
+//## D3 LOGIC ##
+const createDiagram = function() {
+  // Set d3 variables
+  valueY = stackGenerator(data)
+  g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-  const stackGenerator = d3.stack().keys(['totalDisabledCapacity', 'totalNotDisabledCapacity'])
-  const stackedData = stackGenerator(data)
-  console.log('stackeddata', stackedData)
+  // Create Diagram
+  setScales()
+  setAxises()
+  drawBar()
+}
 
-  const colorScale = d3.scaleOrdinal()
+const setScales = function(){
+  colorScale = d3.scaleOrdinal()
     .domain(['totalDisabledCapacity', 'totalNotDisabledCapacity'])
     .range(['green', 'red'])
 
-  const scaleY = d3.scaleLinear()
-    .domain([d3.max(stackedData, layer => d3.max(layer, subLayer => subLayer[1])), 0])
+  scaleY = d3.scaleLinear()
+    .domain([d3.max(valueY, layer => d3.max(layer, subLayer => subLayer[1])), 0])
     .range([0, innerHeight])
     .nice()
-    console.log('domain', scaleY.domain())
 
-  const scaleX = d3.scaleBand()
-    .domain(data.map(valueX))
+  scaleX = d3.scaleBand()
+    .domain(data.map(valueX)) // Select all the provinces for the domain
     .range([0, innerWidth])
     .padding(0.2)
+}
 
+const setAxises = function(){
   const yAxis = d3.axisLeft(scaleY)
     .tickSize(-innerWidth)
 
   const xAxis = d3.axisBottom(scaleX)
-
-  const g = svg.append('g')
-    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
   const yAxisGroup = g.append('g').call(yAxis)
   yAxisGroup.select('.domain').remove()
@@ -154,8 +163,10 @@ const createDiagram = data => {
     .attr('y', -20)
     .attr('x', innerWidth / 2)
     .attr('class', 'title')
+}
 
-  g.selectAll('.layer').data(stackedData)
+const drawBar = function(){
+  g.selectAll('.layer').data(valueY)
     .enter().append('g')
     .attr('class', 'layer')
     .attr("fill", d => colorScale(d.key))
@@ -165,22 +176,4 @@ const createDiagram = data => {
         .attr('y', d => scaleY(d[1]))
         .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
         .attr('width', scaleX.bandwidth())
-  //
-  //
-  // g.selectAll('rect').data(layers)
-  //   .data(layer => layer)
-  //     .enter().append('rect')
-  //       .attr('class', 'layer')
-
-
-
-
-
-
-  // g.selectAll('rect').data(data)
-  //   .enter().append('rect')
-  //     .attr('x', d => scaleX(valueX(d)))
-  //     .attr('y', d => scaleY(valueY(d)))
-  //     .attr('height', d => innerHeight - scaleY(valueY(d)))
-  //     .attr('width', scaleX.bandwidth())
 }
