@@ -6,11 +6,11 @@ async function setupData(){
   console.log(parkingOverview)
   const combinedData = await combineData(parkingOverview)
   console.dir(combinedData)
-  document.getElementById('button').addEventListener('click', download_txt(combinedData))
+  download_txt(combinedData)
 }
 
 async function combineData(parkingOverview){
-  const parkingOverviewSliced = parkingOverview.ParkingFacilities.splice(7450, 7500)
+  const parkingOverviewSliced = parkingOverview.ParkingFacilities
   const parkingIdentifiers = parkingOverviewSliced.map(garage => garage.identifier)
   console.log(parkingIdentifiers)
   const baseUrl = proxyUrl + overviewRDWUrl + 'static/'
@@ -19,13 +19,13 @@ async function combineData(parkingOverview){
   console.log(parkingFacilityArray)
   const dataCollection = await Promise.all(parkingFacilityArray)
   const dataCollectionArray = dataCollection.map(garage => {
-    console.log(garage)
-    cleanLocation(garage)
-    cleanCapacity(garage)
-    console.log('cleaned:', garage)
+    // console.log(garage)
+    // cleanLocation(garage)
+    // cleanCapacity(garage)
+    // console.log('cleaned:', garage)
     return {
       location: getLocationIfExist(garage),
-      capacity: garage.parkingFacilityInformation.specifications[0].capacity,
+      capacity: getCapacityIfExist(garage),
       disabledAccess: garage.parkingFacilityInformation.limitedAccess
     }
   })
@@ -42,55 +42,33 @@ async function getData(url){
 }
 
 function getLocationIfExist(garage){
-  if (typeof garage.parkingFacilityInformation.operator == 'undefined'){
+  if ((typeof garage.parkingFacilityInformation.operator == 'undefined') || (typeof garage.parkingFacilityInformation.operator.postalAddress == 'undefined')){
     return null
   }
 
   else if (garage.parkingFacilityInformation.operator.postalAddress.province !== 'undefined'){
     return garage.parkingFacilityInformation.operator.postalAddress.province
   }
-  
-  else{
+  return null
+}
+
+function getCapacityIfExist(garage){
+  if ((typeof garage.parkingFacilityInformation.specifications == 'undefined') || (garage.parkingFacilityInformation.specifications[0] == null) || (typeof garage.parkingFacilityInformation.specifications[0] == 'undefined') || (typeof garage.parkingFacilityInformation.specifications[0].capacity == 'undefined')){
     return null
   }
-}
 
-const cleanLocation = function(parkingGarage){
-
-  if (typeof parkingGarage.parkingFacilityInformation.operator == 'undefined'){
-    console.log('changing')
-    parkingGarage.parkingFacilityInformation = {operator: {postalAddress: {province: null}}}
+  else if (typeof garage.parkingFacilityInformation.specifications[0].capacity !== 'undefined'){
+    return garage.parkingFacilityInformation.specifications[0].capacity
   }
-
-  else if (typeof parkingGarage.parkingFacilityInformation.operator.postalAddress == 'undefined'){
-    parkingGarage.parkingFacilityInformation.operator.postalAddress = {province: null}
-  }
-}
-
-const cleanCapacity = function(parkingGarage){
-  if (typeof parkingGarage.parkingFacilityInformation.specifications == 'undefined'){
-    parkingGarage.parkingFacilityInformation = {specifications: []}
-    parkingGarage.parkingFacilityInformation.specifications[0] = {capacity: null}
-  }
-
-  else if (typeof parkingGarage.parkingFacilityInformation.specifications[0] == 'undefined' || null){
-    parkingGarage.parkingFacilityInformation.specifications[0].capacity = null
-  }
-
-  else if (parkingGarage.parkingFacilityInformation.specifications[0] == null){
-    parkingGarage.parkingFacilityInformation.specifications[0] = {capacity: null}
-  }
-
-  else if (typeof parkingGarage.parkingFacilityInformation.specifications[0].capacity == 'undefined'){
-    parkingGarage.parkingFacilityInformation.specifications[0].capacity = null
-  }
+  return null
 }
 
 function download_txt(data) {
-  const textToSave = JSON.stringify(data)
+  //SOURCE FOR BASE IDEA: https://stackoverflow.com/questions/33531158/export-from-variable-to-json-file
+  const parkingDataCollection = JSON.stringify(data)
   const hiddenElement = document.createElement('a')
 
-  hiddenElement.href = 'data:attachment/text,' + encodeURI(textToSave)
+  hiddenElement.href = 'data:attachment/text,' + encodeURI(parkingDataCollection)
   hiddenElement.target = '_blank'
   hiddenElement.download = 'myFile.txt'
   hiddenElement.click()

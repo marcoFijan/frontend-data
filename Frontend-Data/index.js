@@ -1,8 +1,8 @@
 // import { max } from 'd3'
 
 const proxyURL = 'https://cors-anywhere.herokuapp.com/' // proxylink from Laurens Aarnoudse: Needed for https request for getting the data from local host
-const parkingSpecsURL = 'https://raw.githubusercontent.com/SharonV33/frontend-data/main/data/parkeergarages_1000.json'
-const provinces = ['groningen', 'friesland', 'overijsel', 'drenthe', 'gelderland', 'limburg', 'noord-brabant', 'zuid-holland', 'noord-holland', 'zeeland', 'utrecht', 'flevoland']
+const parkingSpecsURL = 'https://raw.githubusercontent.com/marcoFijan/hostRDWData/main/rdwData.json'
+const provinces = ['groningen', 'friesland', 'overijssel', 'drenthe', 'gelderland', 'limburg', 'noord-brabant', 'zuid-holland', 'noord-holland', 'zeeland', 'utrecht', 'flevoland']
 
 
 // const margin = { left: 200, right: 50, bottom: 50, top: 50 }
@@ -11,44 +11,42 @@ const width = 700
 const height = 400
 
 //Receiving the data
-const parkingSpecsOverview = JSON.parse(RDWData)
-console.log(parkingSpecsOverview[0])
+const parkingOverviewRequest = d3.json(proxyURL + parkingSpecsURL)
+  .then(parkingOverview => {
+    console.log(parkingOverview)
+    const capacityPerLocationCollection = provinces.map(province => {
+      const parkingOverviewFiltered = filterUnknown(parkingOverview)
+      const capacityPerLocation = getCapacityPerLocation(parkingOverviewFiltered, province)
+      const sumOfCapacity = getSumOfCapacity(capacityPerLocation)
+      const sumOfDisabledCapacity = getSumOfDisabledCapacity(capacityPerLocation)
+      const percentageDisabledCapacity = getPercentage(sumOfCapacity, sumOfDisabledCapacity)
+      return {
+        province: province,
+        totalCapacity: sumOfCapacity,
+        totalDisabledCapacity: sumOfDisabledCapacity,
+        totalNotDisabledCapacity: (sumOfCapacity - sumOfDisabledCapacity),
+        percentageAvailible: percentageDisabledCapacity,
+        percentageNotAvailible: (100 - percentageDisabledCapacity)
+      }
+    })
+    // const capacityPerLocation = getCapacityPerLocation(usefullDataArray, 'drenthe')
+    // getSumOfCapacity(capacityPerLocation)
+    // count all capacity
+    console.log(capacityPerLocationCollection)
+    createDiagram(capacityPerLocationCollection)
+  })
 
+const filterUnknown = function(parkingGarages){
+   return parkingGarages.filter(garage => garage.location && garage.capacity)
+}
 
-// const parkingSpecsOverview = d3.json(proxyURL + parkingSpecsURL)
-//   .then(parkingOverview => {
-//     return getUsefullDataArray(parkingOverview)
-//   })
-//   .then(usefullDataArray => {
-//     console.log(usefullDataArray)
-//     const capacityPerLocationCollection = provinces.map(province => {
-//       const capacityPerLocation = getCapacityPerLocation(usefullDataArray, province)
-//       const sumOfCapacity = getSumOfCapacity(capacityPerLocation)
-//       const sumOfDisabledCapacity = getSumOfDisabledCapacity(capacityPerLocation)
-//       const percentageDisabledCapacity = getPercentage(sumOfCapacity, sumOfDisabledCapacity)
-//       return {
-//         province: province,
-//         totalCapacity: sumOfCapacity,
-//         totalDisabledCapacity: sumOfDisabledCapacity,
-//         totalNotDisabledCapacity: (sumOfCapacity - sumOfDisabledCapacity),
-//         percentageAvailible: percentageDisabledCapacity,
-//         percentageNotAvailible: (100 - percentageDisabledCapacity)
-//       }
-//     })
-//     // const capacityPerLocation = getCapacityPerLocation(usefullDataArray, 'drenthe')
-//     // getSumOfCapacity(capacityPerLocation)
-//     // count all capacity
-//     console.log(capacityPerLocationCollection)
-//     createDiagram(capacityPerLocationCollection)
-//   })
-
-// const cleanDisabledAccess = function(parkingGarage){
-//   if (parkingGarage.parkingFacilityInformation.limitedAccess == false){
-//     console.log(':(')
-//   }
-//   else if (parkingGarage.parkingFacilityInformation.limitedAccess == true)
-//   console.log(':)')
-// }
+const cleanDisabledAccess = function(parkingGarage){
+  if (parkingGarage.parkingFacilityInformation.limitedAccess == false){
+    console.log(':(')
+  }
+  else if (parkingGarage.parkingFacilityInformation.limitedAccess == true)
+  console.log(':)')
+}
 
 const getUsefullDataArray = async function(dataArray) {
   const usefullDataArray = dataArray.map(parkingGarage => {
@@ -82,6 +80,7 @@ const getCapacityPerLocation = function(usefullDataArray, location){
 }
 
 const getSumOfCapacity = function(capacityPerLocation){
+  console.log('capacityperlocation', capacityPerLocation)
   return capacityPerLocation.reduce((sum, garage) => sum + garage.capacity ,0)//Help from Fun Fun Functions: https://www.youtube.com/watch?v=Wl98eZpkp-c
   // console.log(total)
 }
