@@ -1,5 +1,6 @@
 //## SET DATA CLEANING VARIABLES ##
 const proxyURL = 'https://cors-anywhere.herokuapp.com/' // proxylink from Laurens Aarnoudse: Needed for https request for getting the data from local host
+// const proxyURL = 'http://gobetween.oklabs.org/'
 const parkingSpecsURL = 'https://raw.githubusercontent.com/marcoFijan/hostRDWData/main/data.json'
 const provinces = ['groningen', 'friesland', 'overijssel', 'drenthe', 'gelderland', 'limburg', 'noord-brabant', 'zuid-holland', 'noord-holland', 'zeeland', 'utrecht', 'flevoland']
 
@@ -24,7 +25,7 @@ let scaleY
 let scaleX
 
 //## Receiving the data ##
-const parkingOverviewRequest = d3.json(proxyURL + parkingSpecsURL)
+const parkingOverviewRequest = d3.json(parkingSpecsURL)
   .then(parkingOverview => {
     console.log(parkingOverview)
     console.log(parkingOverview.filter(garage => garage.disabledAccess === true))
@@ -113,6 +114,7 @@ const createDiagram = function() {
   setScales()
   setAxises()
   drawBar()
+  checkInput()
 }
 
 const setScales = function(){
@@ -176,4 +178,13 @@ const drawBar = function(){
         .attr('y', d => scaleY(d[1]))
         .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
         .attr('width', scaleX.bandwidth())
+}
+
+const checkInput = function(){
+  const userInput = d3.select('#filterBigBar')
+      .on("click", filterBigBar)
+}
+
+const filterBigBar = function(){
+  console.log('click')
 }
