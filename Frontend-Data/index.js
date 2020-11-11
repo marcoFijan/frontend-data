@@ -122,7 +122,7 @@ const createDiagram = function() {
 const setScales = function(data){
   colorScale = d3.scaleOrdinal()
     .domain(['totalDisabledCapacity', 'totalNotDisabledCapacity'])
-    .range(['#D2723A', '#2D7EB0'])
+    .range(['#BA3E8D', '#1A6E93'])
 
   scaleY = d3.scaleLinear()
     .domain([d3.max(valueY, layer => d3.max(layer, subLayer => subLayer[1])), 0])
@@ -185,8 +185,10 @@ const drawBar = function(){
       .enter().append('rect')
         .attr('x', d => scaleX(d.data.province))
         .attr('y', d => scaleY(d[1]))
-        .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
         .attr('width', scaleX.bandwidth())
+        .attr("height", 0)
+  	    .transition().duration(800)
+        .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
 }
 
 const checkInput = function(){
@@ -208,26 +210,33 @@ const filterBigBar = function(){
   valueY = stackGenerator(filteredData)
   setScales(filteredData)
 
-  // Update the layers and rectangles
+  // Save the layers and collection of bars into variables
   const layers = svg.selectAll('.layer').data(valueY)
   const bars = layers.selectAll('rect').data(d => d)
 
+  // Update the layers and rectangles
   bars
     .attr('x', d => scaleX(d.data.province))
     .attr('y', d => scaleY(d[1]))
-    .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
     .attr('width', scaleX.bandwidth())
+    .attr("height", 0)
+    .transition().duration(800)
+    .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
 
+  // Create new rectangles inside the layers
   bars.enter()
     .append('rect')
       .attr('x', d => scaleX(d.data.province))
       .attr('y', d => scaleY(d[1]))
-      .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
       .attr('width', scaleX.bandwidth())
+      .attr("height", 0)
+      .transition().duration(800)
+      .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
 
+  // Remove non existing retangles
   bars.exit().remove()
 
-  // update axises
+  // Call the x-axis
   const callXAxis = svg.select('.xAxis')
     .call(d3.axisBottom(scaleX))
 
@@ -236,7 +245,7 @@ const filterBigBar = function(){
 
   callXAxis.selectAll('.domain, .tick line').remove()
 
+  // Call the y-axis
   svg.select('.yAxis')
     .call(d3.axisLeft(scaleY).tickSize(-innerWidth))
-
 }

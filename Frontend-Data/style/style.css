@@ -1,17 +1,54 @@
+*{
+  font-family: 'Roboto', sans-serif;
+}
+
 body{
-  background: #2A292F;
+  width: 100%;
+  height: 100vh;
+  background: radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(190,190,190,1) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1{
+  font-size: 1.8em;
+  padding: 8vh 0;
+  color: #2A292F;
+  font-weight: normal;
+}
+
+h2{
+  font-size: 1.3em;
+  font-weight: normal;
+  border-bottom: 1px solid #2A292F;
+}
+
+.chartCollection{
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  color: #2A292F;
+}
+
+.chartCollection>form{
+  border-radius: 1em;
+  border: 1px solid #A5A5A6;
+  padding: 0 1em 1em 1em;
+  margin: 1em;
 }
 
 svg{
-  width: 100%;
-  max-width: 700px;
+  width: 700px;
   height: 400px;
-  background: #2A292F;
+}
 
+rect{
+  opacity: .8;
 }
 
 text{
-  fill: #F2F2F2;
+  fill: #2A292F;
 }
 
 .tick line{
@@ -20,26 +57,26 @@ text{
 
 svg > text{
   font-size: 1.5em;
-  font-family: sans-serif;
 }
 
 .title{
   font-size: 1.5em;
   text-anchor: middle;
-  fill: #F2F2F2;
+  fill: #2A292F;
 }
 
 .xAxis text{
   text-anchor: start;
 }
 
-/* rect{
-  fill: red;
-  opacity: .8;
-} */
+.xAxis text.xAxisName, .yAxisName{
+  font-size: 2em;
+  text-anchor: middle;
+  fill: #2A292F;
+}
 
-.yAxisName, .xAxisName{
+/* .yAxisName, .xAxisName{
   font-size: 2em;
   text-anchor: middle;
   fill: #F2F2F2;
-}
+} */
