@@ -210,20 +210,20 @@ const checkInput = function(){
       .on("click", filterBigBar)
 }
 
-const getAverageCapacity = function(){
-  const sumOfCapacity = data.reduce((sum, garage) => sum + garage.totalCapacity ,0)
-  const averageOfCapacity = sumOfCapacity / data.length
-  console.log(averageOfCapacity)
-
-    g.select('line')
-      .enter().append('line')
-        .attr('y1', scaleY(averageOfCapacity))
-        .attr('x1', 0)
-        .attr('y2', scaleY(averageOfCapacity))
-        .attr('x2', innerWidth)
-        .attr('stroke-width', 2)
-        .attr('stroke', 'black')
-}
+// const getAverageCapacity = function(){
+//   const sumOfCapacity = data.reduce((sum, garage) => sum + garage.totalCapacity ,0)
+//   const averageOfCapacity = sumOfCapacity / data.length
+//   console.log(averageOfCapacity)
+//
+//     g.select('line')
+//       .enter().append('line')
+//         .attr('y1', scaleY(averageOfCapacity))
+//         .attr('x1', 0)
+//         .attr('y2', scaleY(averageOfCapacity))
+//         .attr('x2', innerWidth)
+//         .attr('stroke-width', 2)
+//         .attr('stroke', 'black')
+// }
 
 const filterBigBar = function(){
   let filterOn = this.checked
@@ -242,9 +242,9 @@ const filterBigBar = function(){
   // Save the layers and collection of bars into variables
   const layers = svg.selectAll('.layer').data(valueY)
   const bars = layers.selectAll('rect').data(d => d)
-  const labelCollection = svg.selectAll('.labelCollection').data(valueY)
-  const labels = labelCollection.selectAll('text').data(d => d)
-  console.log('labels', labelCollection)
+  // const labelCollection = svg.selectAll('.labelCollection').data(valueY)
+  // const labels = labelCollection.selectAll('text').data(d => d)
+  // console.log('labels', labelCollection)
 
   // Update the layers and rectangles
   bars
@@ -256,14 +256,14 @@ const filterBigBar = function(){
     .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
 
   // Update the labels
-  labels
-    .attr('class', 'label')
-    .attr('alignment-baseline', 'middle')
-    .attr('x', d => scaleX(d.data.province))
-    .attr('y', d => scaleY(d[1]))
-    .style('font-size', '12px')
-    .style('font-weight', 'bold')
-    .text(d => d[1]);
+  // labels
+  //   .attr('class', 'label')
+  //   .attr('alignment-baseline', 'middle')
+  //   .attr('x', d => scaleX(d.data.province))
+  //   .attr('y', d => scaleY(d[1]))
+  //   .style('font-size', '12px')
+  //   .style('font-weight', 'bold')
+  //   .text(d => d[1]);
 
   // Create new rectangles inside the layers
   bars.enter()
