@@ -11,63 +11,7 @@ As of now, this project has the following features:
 
 ## Data used
 For this project I am using a big dataset of RDW. Here are all the little datasets from the RDW website combined which makes the data for many categories more complete.
-
-## How to install and use
-### OPTION 1: Cloning git
-To try this project for yourself, you can clone the github repo to your locale machine. Just follow these steps
-#### STEP 1: Create your local git repository
-Navigate with your terminal to the desired folder where you want to clone this repo
-```
-cd "c:/foldername1/foldername2/destination"
-```
-
-**Optional** Use this command to create a new folder where you want to clone this repo.
-```
-mkdir "foldername"
-```
-**Optional** Don't forget to navigate to that folder with using the cd command
-
-
-**Optional** If you desire to make changes to this project run this command to make that possible
-```
-git init
-```
-
-#### STEP 2: git clone
-To clone this project and receive it on your locale machine, use this command
-```
-git clone https://github.com/marcoFijan/frontend-data.git
-```
-
-After this command your computer will download the files automaticly
-
-#### STEP 3: Launching
-Navigate to the folder where you cloned the git repository and launch the index.html
-
-#### STEP 4: Open console
-To see your results, you need to look in the console
-Right-click on the webpage and click 'inspect' or 'inspect element'
-Then, click on the tab called 'console'
-
-That's it. You are all set up!
-
-### OPTION 1: Download manually
-#### STEP 1: Download the files
-Navigate to the code on Github and press the 'code' button. After pressing the 'code' button select 'download as zip'
-[![afbeelding.png](https://i.postimg.cc/4xkw1zt8/afbeelding.png)](https://postimg.cc/9rbGmwLT)
-
-#### STEP 2: Unzipping
-After downloading the files navigate to a folder of your choice and copy the files from the zip folder to that folder.
-
-#### STEP 3: Launching
-Navigate to that folder where you put the files and launch the index.html
-
-#### STEP 4: Open console
-To see your results, you need to look in the console
-Right-click on the webpage and click 'inspect' or 'inspect element'
-Then, click on the tab called 'console'
-
-That's it. You are all set up!
+All collected data in data.json is originally from [RDW](https://npropendata.rdw.nl/parkingdata/v2/). To read the data yourself, please navigate to [this link](https://npropendata.rdw.nl/parkingdata/v2/)
 
 ## Live Deploy Link
 To just try the project without the downloading hastle navigate to the [live deploy](https://marcofijan.github.io/frontend-data/)
