@@ -76,14 +76,6 @@ const getAverageCapacity = function(parkingGarages){
   return sumOfCapacity / parkingGarages.length
 }
 
-// const cleanDisabledAccess = function(parkingGarage){
-//   if (parkingGarage.parkingFacilityInformation.limitedAccess == false){
-//     console.log(':(')
-//   }
-//   else if (parkingGarage.parkingFacilityInformation.limitedAccess == true)
-//   console.log(':)')
-// }
-
 const getCapacityPerLocation = function(usefullDataArray, location){
   return usefullDataArray.filter(garage => garage.location.toLowerCase() === location)
 }
@@ -131,7 +123,6 @@ const createDiagram = function() {
   setAxises()
   drawBar()
   checkInput()
-  // getAverageCapacity()
 }
 
 const setScales = function(data){
@@ -204,19 +195,6 @@ const drawBar = function(){
         .attr("height", 0) // set height 0 for the transition
   	    .transition().duration(800)
         .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
-
-  g.selectAll('.labelCollection').data(stackedBars)
-    .attr('class', 'layerCollection')
-    .enter().append('g')
-    .selectAll('.label').data(d => d)
-      .enter().append('text')
-        .attr('class', 'label')
-        .attr('alignment-baseline', 'middle')
-        .attr('x', d => scaleX(d.data.province))
-        .attr('y', d => scaleY(d[1]))
-        .style('font-size', '12px')
-        .style('font-weight', 'bold')
-        .text(d => d[1]);
 }
 
 const checkInput = function(){
@@ -273,9 +251,6 @@ const updateBars = function(){
   // Save the layers and collection of bars into variables
   const layers = svg.selectAll('.layer').data(stackedBars)
   const bars = layers.selectAll('rect').data(d => d)
-  const labelCollection = svg.selectAll('.labelCollection').data(stackedBars)
-  const labels = labelCollection.selectAll('text').data(d => d)
-  console.log('labels', labelCollection)
 
   // Update the layers and rectangles
   bars
@@ -286,15 +261,6 @@ const updateBars = function(){
     .transition().duration(800)
     .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
 
-  //Update the labels
-  labels
-    .attr('alignment-baseline', 'middle')
-    .attr('x', d => scaleX(d.data.province))
-    .attr('y', d => scaleY(d[1]))
-    .style('font-size', '12px')
-    .style('font-weight', 'bold')
-    .text(d => d[1]);
-
   // Create new rectangles inside the layers
   bars
   .enter().append('rect')
@@ -304,16 +270,6 @@ const updateBars = function(){
       .attr("height", 0) // set height 0 for the transition
       .transition().duration(800)
       .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
-
-  labels
-    .enter().append('text')
-      .attr('class', 'label')
-      .attr('alignment-baseline', 'middle')
-      .attr('x', d => scaleX(d.data.province))
-      .attr('y', d => scaleY(d[1]))
-      .style('font-size', '12px')
-      .style('font-weight', 'bold')
-      .text(d => d[1]);
 
   // Remove non existing retangles
   bars.exit().remove()
