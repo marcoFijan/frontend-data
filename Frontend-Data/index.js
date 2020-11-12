@@ -52,6 +52,7 @@ const parkingOverviewRequest = d3.json(parkingSpecsURL)
     })
     console.log(capacityPerLocationCollection)
     data = capacityPerLocationCollection
+    filteredData = data
     createDiagram()
   })
 
@@ -220,8 +221,10 @@ const drawBar = function(){
 }
 
 const checkInput = function(){
-  const userInput = d3.select('#filterBigBar')
+  const bigBarFilter = d3.select('#filterBigBar')
       .on("click", filterBigBar)
+  const unknownFilter = d3.select('#filterUnknown')
+      .on('click', filterUnknownProvince)
 }
 
 // const getAverageCapacity = function(){
@@ -239,17 +242,47 @@ const checkInput = function(){
 //         .attr('stroke', 'black')
 // }
 
+// ## Update function for removing the bigest bar ##
 const filterBigBar = function(){
-  let filterOn = this.checked
+  let filterOn = d3.select('#filterBigBar')._groups[0][0].checked
   if (filterOn){
-    const highestCapacity = d3.max(data.map(province => province.totalCapacity)) // calculate highestCapacity
-    filteredData = data.filter(province => province.totalCapacity !== highestCapacity) // return array without that highestCapacity
+    const noUnknownProvinces = data.filter(garage => garage.province !== 'onbekend')
+    const highestCapacity = d3.max(noUnknownProvinces.map(province => province.totalCapacity)) // calculate highestCapacity
+    filteredData = filteredData.filter(province => province.totalCapacity !== highestCapacity) // return array without that highestCapacity
   }
-
   else {
     filteredData = data
+    if(d3.select('#filterUnknown')._groups[0][0].checked){
+      filterUnknownProvince()
+    }
+    console.log('filterBigBar', d3.select('#filterBigBar')._groups[0][0].checked)
+    console.log('filterunknown', d3.select('#filterUnknown')._groups[0][0].checked)
+    checkInput()
   }
+  updateBars()
+}
 
+// ## Update function for removing the unknown province bar ##
+const filterUnknownProvince = function(){
+  let filterOn = d3.select('#filterUnknown')._groups[0][0].checked
+  if (filterOn){
+    filteredData = filteredData.filter(province => province.province !== 'onbekend') // return array without that highestCapacity
+    console.log('filter', filteredData)
+  }
+  else {
+    filteredData = data
+    if(d3.select('#filterBigBar')._groups[0][0].checked){
+      filterBigBar()
+    }
+    console.log('filterBigBar', d3.select('#filterBigBar')._groups[0][0].checked)
+    console.log('filterunknown', d3.select('#filterUnknown')._groups[0][0].checked)
+    checkInput()
+  }
+  updateBars()
+}
+
+// ## General update function ##
+const updateBars = function(){
   valueY = stackGenerator(filteredData)
   setScales(filteredData)
 
