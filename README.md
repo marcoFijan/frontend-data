@@ -1,7 +1,8 @@
 # Functional programming & Frontend data
 
 Student name: Marco Fijan
-[Live deploy link](https://marcofijan.github.io/functional-programming/)
+
+[Live deploy link](https://marcofijan.github.io/frontend-data/)
 
 [![afbeelding.png](https://i.postimg.cc/Xv8q0qbH/afbeelding.png)](https://postimg.cc/wt1gX63L)
 
