@@ -42,7 +42,7 @@ I want to visualize the accessibility with percentages of availible parking spac
 ### Necessities
 Before I can visualize my concept, I need to collect the data that I need:
 
-I wanted to collect my data from different RDWDatasets. Unfortunatly, many datasets were incomplete or couldn't be linked together. So I chose for the [big RDWDataset](https://npropendata.rdw.nl/parkingdata/v2/) where all data could be fetched.
+I wanted to collect my data from [different RDWDatasets](https://opendata.rdw.nl/browse?category=Parkeren&provenance=official&page=1). Unfortunatly, many datasets were incomplete or couldn't be linked together. So I chose for the [big RDWDataset](https://npropendata.rdw.nl/parkingdata/v2/) where all data could be fetched.
 
 From the dataset I need the following data:
 * DisabledAccess: boolean which shows if parking garage is accessible for people with a phisical handicap
@@ -50,6 +50,11 @@ From the dataset I need the following data:
 * Province: string that gives the province where the parking garage is located
 
 To read how I received and saved the data, please navigate to [my wiki page](wikiURL) where I explain in detail on how I collected and saved that data.
+
+## Examples used
+* For to basics of getAllRDWData.json I used the [example of Laurens Aarnoudse](https://vizhub.com/Razpudding/c2a9c9b4fde84816931c404951c79873?edit=files&file=index.js)
+* For the basic d3 barchart I used the [example of curran](https://www.youtube.com/watch?v=_8V5o2UHG0E&t=17327s&ab_channel=freeCodeCamp.org)
+* To understand how stack worked in d3, I used the example of [the Muratorium](https://www.youtube.com/watch?v=bXN9anQN_kQ&t)
 
 ## Features
 
@@ -157,7 +162,7 @@ To just try the project without the downloading hastle navigate to the [live dep
 * Laurens Aarnoudse for the live code demo's and explaining functional programming
 * Chelsea Doeleman for tips on how to make better functional programming functions
 * RDW for collecting and documenting the dataset
-* Sharon Veldman for hoisting the dataset
-* Curan for the amazing explanation of D3
+* [Curan](https://www.youtube.com/watch?v=_8V5o2UHG0E&t=17327s&ab_channel=freeCodeCamp.org) for the amazing explanation of D3
 * Laurens Aarnoudse for explaining how to avoid the CORS error
 * Rijk van Zanten for explaining how to connect multiple datasets with eachother
+* [The Muratorium](https://www.youtube.com/watch?v=bXN9anQN_kQ&t) for explaining stack in d3
