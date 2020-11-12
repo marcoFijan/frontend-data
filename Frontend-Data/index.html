@@ -16,12 +16,36 @@
     <svg></svg>
     <form>
       <h2>Filter</h2>
-      <input type="checkbox" id="filterUnknown" name="filterUnknown">
-      <label for="filterUnknown">Verwijder onbekende locatie data</label>
-      <input type="checkbox" id="filterBigBar" name="filterBigBar">
-      <label for="filterBigBar">Verwijder provincie met de meeste parkeerplaatsen</label>
+      <ul>
+        <li>
+          <input type="checkbox" id="filterUnknown" name="filterUnknown">
+          <label for="filterUnknown">Verwijder onbekende locatie data</label>
+        </li>
+        <li>
+          <input type="checkbox" id="filterBigBar" name="filterBigBar">
+          <label for="filterBigBar">Verwijder provincie met de meeste parkeerplaatsen</label>
+        </li>
+      </ul>
+      <h2>Legenda</h2>
+      <ul>
+        <li class='legendaItem'>
+          <div class="totalCapacityColor"></div>
+          <p>Aantal niet toegankelijke parkeerplaatsen</p>
+        </li>
+        <li class='legendaItem'>
+          <div class="totalDisabledCapacityColor"></div>
+          <p>Aantal toegankelijke parkeerplaatsen</p>
+        </li>
+      </ul>
     </form>
   </div>
   <script src="index.js"></script>
+  <article>
+    <h2>Gebruikt voorbeeld:</h2>
+    <ul>
+      <li><a href="https://www.youtube.com/watch?v=_8V5o2UHG0E&t">Data Visualization with D3.js - Curran [Video]<a/></li>
+    </ul>
+  </article>
+
 </body>
 </html>

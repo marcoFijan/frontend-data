@@ -15,6 +15,8 @@ body{
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 h1{
@@ -27,7 +29,6 @@ h1{
 h2{
   font-size: 1.3em;
   font-weight: normal;
-  border-bottom: 1px solid #2A292F;
 }
 
 .chartCollection{
@@ -42,6 +43,75 @@ h2{
   border: 1px solid #A5A5A6;
   padding: 0 1em 1em 1em;
   margin: 1em;
+  max-width: 16em;
+}
+
+.chartCollection>form ul{
+  list-style: none;
+  padding: 0;
+}
+
+.chartCollection>form ul li{
+  padding: .5em 0;
+}
+
+.chartCollection input{
+  display: none;
+}
+
+.chartCollection>form ul li label:hover, a:hover{
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.legendaItem{
+  display: flex;
+  align-items: center;
+}
+
+.legendaItem p{
+  margin: 0;
+  padding-left: 1em;
+}
+
+input[type="checkbox"]:checked + label {
+  color: #F57624;
+  font-weight: bold;
+}
+
+.chartCollection h2{
+  border-bottom: 1px solid #2A292F;
+}
+
+.totalDisabledCapacityColor, .totalCapacityColor{
+  width: 1.3em;
+  height: 2.2em;
+  flex-shrink: 0;
+}
+
+.totalDisabledCapacityColor{
+  background: #BA3E8D;
+}
+
+.totalCapacityColor{
+  background: #1A6E93;
+}
+
+article{
+  border-top: 1px solid #2A292F;
+  width: 80%;
+}
+
+article h2, article ul{
+  text-align: center;
+  align-self: center;
+  list-style: none;
+  padding: 0;
+}
+
+a{
+  color: black;
+  text-decoration: none;
 }
 
 /* D3 CHART STYLING */

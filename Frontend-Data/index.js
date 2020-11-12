@@ -19,7 +19,7 @@ const innerHeight = height - margin.top - margin.bottom
 //-- Y & X Values --
 const stackGenerator = d3.stack().keys(['totalDisabledCapacity', 'totalNotDisabledCapacity'])
 const valueX = d => d.province // d.data.province
-let valueY
+let stackedBars
 //-- Scales --
 let colorScale
 let scaleY
@@ -123,8 +123,7 @@ const getPercentage = function(totalCapacity, disabledCapacity){
 //## D3 LOGIC ##
 const createDiagram = function() {
   // Define d3 variables
-  valueY = stackGenerator(data)
-  console.log('valueY', valueY)
+  stackedBars = stackGenerator(data)
   g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
   // Create Diagram
@@ -141,7 +140,7 @@ const setScales = function(data){
     .range(['#BA3E8D', '#1A6E93'])
 
   scaleY = d3.scaleLinear()
-    .domain([d3.max(valueY, layer => d3.max(layer, subLayer => subLayer[1])), 0])
+    .domain([d3.max(stackedBars, layer => d3.max(layer, subLayer => subLayer[1])), 0])
     .range([0, innerHeight])
     .nice()
 
@@ -193,7 +192,7 @@ const setAxises = function(){
 }
 
 const drawBar = function(){
-  g.selectAll('.layer').data(valueY)
+  g.selectAll('.layer').data(stackedBars)
     .enter().append('g')
     .attr('class', 'layer')
     .attr("fill", d => colorScale(d.key))
@@ -206,7 +205,7 @@ const drawBar = function(){
   	    .transition().duration(800)
         .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
 
-  // g.selectAll('.labelCollection').data(valueY)
+  // g.selectAll('.labelCollection').data(stackedBars)
   //   .attr('class', 'layerCollection')
   //   .enter().append('g')
   //   .selectAll('.label').data(d => d)
@@ -283,13 +282,13 @@ const filterUnknownProvince = function(){
 
 // ## General update function ##
 const updateBars = function(){
-  valueY = stackGenerator(filteredData)
+  stackedBars = stackGenerator(filteredData)
   setScales(filteredData)
 
   // Save the layers and collection of bars into variables
-  const layers = svg.selectAll('.layer').data(valueY)
+  const layers = svg.selectAll('.layer').data(stackedBars)
   const bars = layers.selectAll('rect').data(d => d)
-  // const labelCollection = svg.selectAll('.labelCollection').data(valueY)
+  // const labelCollection = svg.selectAll('.labelCollection').data(stackedBars)
   // const labels = labelCollection.selectAll('text').data(d => d)
   // console.log('labels', labelCollection)
 
