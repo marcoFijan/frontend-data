@@ -24,6 +24,8 @@ h1{
   padding: 8vh 0;
   color: #2A292F;
   font-weight: normal;
+  text-align: center;
+  width: 80%;
 }
 
 h2{
@@ -53,10 +55,13 @@ h2{
 
 .chartCollection>form ul li{
   padding: .5em 0;
+  display: flex;
+  align-items: center;
 }
 
-.chartCollection input{
-  display: none;
+.chartCollection>form ul li p, .chartCollection>form ul li label{
+  margin: 0;
+  padding-left: 1em;
 }
 
 .chartCollection>form ul li label:hover, a:hover{
@@ -64,14 +69,12 @@ h2{
   text-decoration: underline;
 }
 
-.legendaItem{
-  display: flex;
-  align-items: center;
-}
-
-.legendaItem p{
-  margin: 0;
-  padding-left: 1em;
+.filterUnknownBox, .filterBigBarBox{
+  width: 1em;
+  height: 1em;
+  border: 1px solid #2A292F;
+  flex-shrink: 0;
+  background: white;
 }
 
 input[type="checkbox"]:checked + label {
@@ -99,7 +102,7 @@ input[type="checkbox"]:checked + label {
 
 article{
   border-top: 1px solid #2A292F;
-  width: 80%;
+  width: 70%;
 }
 
 article h2, article ul{

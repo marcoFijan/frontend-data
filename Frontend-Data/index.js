@@ -205,18 +205,18 @@ const drawBar = function(){
   	    .transition().duration(800)
         .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
 
-  // g.selectAll('.labelCollection').data(stackedBars)
-  //   .attr('class', 'layerCollection')
-  //   .enter().append('g')
-  //   .selectAll('.label').data(d => d)
-  //     .enter().append('text')
-  //       .attr('class', 'label')
-  //       .attr('alignment-baseline', 'middle')
-  //       .attr('x', d => scaleX(d.data.province))
-  //       .attr('y', d => scaleY(d[1]))
-  //       .style('font-size', '12px')
-  //       .style('font-weight', 'bold')
-  //       .text(d => d[1]);
+  g.selectAll('.labelCollection').data(stackedBars)
+    .attr('class', 'layerCollection')
+    .enter().append('g')
+    .selectAll('.label').data(d => d)
+      .enter().append('text')
+        .attr('class', 'label')
+        .attr('alignment-baseline', 'middle')
+        .attr('x', d => scaleX(d.data.province))
+        .attr('y', d => scaleY(d[1]))
+        .style('font-size', '12px')
+        .style('font-weight', 'bold')
+        .text(d => d[1]);
 }
 
 const checkInput = function(){
@@ -225,21 +225,6 @@ const checkInput = function(){
   const unknownFilter = d3.select('#filterUnknown')
       .on('click', filterUnknownProvince)
 }
-
-// const getAverageCapacity = function(){
-//   const sumOfCapacity = data.reduce((sum, garage) => sum + garage.totalCapacity ,0)
-//   const averageOfCapacity = sumOfCapacity / data.length
-//   console.log(averageOfCapacity)
-//
-//     g.select('line')
-//       .enter().append('line')
-//         .attr('y1', scaleY(averageOfCapacity))
-//         .attr('x1', 0)
-//         .attr('y2', scaleY(averageOfCapacity))
-//         .attr('x2', innerWidth)
-//         .attr('stroke-width', 2)
-//         .attr('stroke', 'black')
-// }
 
 // ## Update function for removing the bigest bar ##
 const filterBigBar = function(){
@@ -288,9 +273,9 @@ const updateBars = function(){
   // Save the layers and collection of bars into variables
   const layers = svg.selectAll('.layer').data(stackedBars)
   const bars = layers.selectAll('rect').data(d => d)
-  // const labelCollection = svg.selectAll('.labelCollection').data(stackedBars)
-  // const labels = labelCollection.selectAll('text').data(d => d)
-  // console.log('labels', labelCollection)
+  const labelCollection = svg.selectAll('.labelCollection').data(stackedBars)
+  const labels = labelCollection.selectAll('text').data(d => d)
+  console.log('labels', labelCollection)
 
   // Update the layers and rectangles
   bars
@@ -301,25 +286,34 @@ const updateBars = function(){
     .transition().duration(800)
     .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
 
-  // Update the labels
-  // labels
-  //   .attr('class', 'label')
-  //   .attr('alignment-baseline', 'middle')
-  //   .attr('x', d => scaleX(d.data.province))
-  //   .attr('y', d => scaleY(d[1]))
-  //   .style('font-size', '12px')
-  //   .style('font-weight', 'bold')
-  //   .text(d => d[1]);
+  //Update the labels
+  labels
+    .attr('alignment-baseline', 'middle')
+    .attr('x', d => scaleX(d.data.province))
+    .attr('y', d => scaleY(d[1]))
+    .style('font-size', '12px')
+    .style('font-weight', 'bold')
+    .text(d => d[1]);
 
   // Create new rectangles inside the layers
-  bars.enter()
-    .append('rect')
+  bars
+  .enter().append('rect')
       .attr('x', d => scaleX(d.data.province))
       .attr('y', d => scaleY(d[1]))
       .attr('width', scaleX.bandwidth())
       .attr("height", 0) // set height 0 for the transition
       .transition().duration(800)
       .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
+
+  labels
+    .enter().append('text')
+      .attr('class', 'label')
+      .attr('alignment-baseline', 'middle')
+      .attr('x', d => scaleX(d.data.province))
+      .attr('y', d => scaleY(d[1]))
+      .style('font-size', '12px')
+      .style('font-weight', 'bold')
+      .text(d => d[1]);
 
   // Remove non existing retangles
   bars.exit().remove()
