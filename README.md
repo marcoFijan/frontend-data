@@ -3,7 +3,7 @@
 Student name: Marco Fijan
 [Live deploy link](https://marcofijan.github.io/functional-programming/)
 
-[![afbeelding.png](https://i.postimg.cc/zG3CD1MJ/afbeelding.png)](https://postimg.cc/RW56G248)
+[![afbeelding.png](https://i.postimg.cc/Xv8q0qbH/afbeelding.png)](https://postimg.cc/wt1gX63L)
 
 ## The Assignment
 The Volkskrant asked me to give interesting insights about 'the car in the city' for a potential interesting article. It's my job to research the RDW datasets for interesting insights. The Volkskrant will write an article about it if I find something interesting. As a tip, the Volkskrant gave me the link to the RDW datasets, but I am free to chose and use other datasets as well.
