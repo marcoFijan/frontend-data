@@ -191,18 +191,18 @@ const drawBar = function(){
   	    .transition().duration(800)
         .attr('height', d => scaleY(d[0]) - scaleY(d[1]))
 
-  g.selectAll('.labelCollection').data(valueY)
-    .attr('class', 'layerCollection')
-    .enter().append('g')
-    .selectAll('.label').data(d => d)
-      .enter().append('text')
-        .attr('class', 'label')
-        .attr('alignment-baseline', 'middle')
-        .attr('x', d => scaleX(d.data.province))
-        .attr('y', d => scaleY(d[1]))
-        .style('font-size', '12px')
-        .style('font-weight', 'bold')
-        .text(d => d[1]);
+  // g.selectAll('.labelCollection').data(valueY)
+  //   .attr('class', 'layerCollection')
+  //   .enter().append('g')
+  //   .selectAll('.label').data(d => d)
+  //     .enter().append('text')
+  //       .attr('class', 'label')
+  //       .attr('alignment-baseline', 'middle')
+  //       .attr('x', d => scaleX(d.data.province))
+  //       .attr('y', d => scaleY(d[1]))
+  //       .style('font-size', '12px')
+  //       .style('font-weight', 'bold')
+  //       .text(d => d[1]);
 }
 
 const checkInput = function(){
